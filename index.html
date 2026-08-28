@@ -14,51 +14,28 @@
   <!-- Chart.js via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- ========================================
        ESTILOS CUSTOMIZADOS
   ======================================== -->
   <style>
-    /* Estilizações para impressão de relatórios */
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #printable-area, #printable-area * {
-        visibility: visible;
-      }
-      #printable-area {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-      }
-      .no-print {
-        display: none !important;
-      }
+      body * { visibility: hidden; }
+      #printable-area, #printable-area * { visibility: visible; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+      .no-print { display: none !important; }
     }
-    
-    /* Scrollbar suave e moderna */
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f1f1; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- ========================================
-       TELA DE LOGIN (v1.2 - Usuários Ocultados)
-  ======================================== -->
+  <!-- TELA DE LOGIN -->
   <div id="screen-login" class="fixed inset-0 z-50 bg-slate-900 flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 border border-slate-100">
       <div class="text-center mb-8">
@@ -94,12 +71,10 @@
     </div>
   </div>
 
-  <!-- ========================================
-       ESTRUTURA PRINCIPAL DO SISTEMA
-  ======================================== -->
+  <!-- ESTRUTURA PRINCIPAL DO SISTEMA -->
   <div id="app-container" class="hidden flex-1 flex flex-col md:flex-row min-h-screen">
 
-    <!-- MENU LATERAL / SIDEBAR -->
+    <!-- SIDEBAR -->
     <aside id="sidebar" class="bg-slate-900 text-slate-300 w-full md:w-64 flex-shrink-0 flex flex-col transition-all duration-300 no-print">
       <div class="p-5 border-b border-slate-800 flex justify-between items-center">
         <div class="flex items-center gap-3">
@@ -111,12 +86,8 @@
             <p id="company-name-display" class="text-xs text-slate-400 truncate max-w-[120px]">Minha Empresa</p>
           </div>
         </div>
-        <button onclick="UI.toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white">
-          <i data-lucide="menu" class="w-6 h-6"></i>
-        </button>
       </div>
 
-      <!-- ITENS DE NAVEGAÇÃO -->
       <nav id="nav-menu" class="flex-1 p-4 space-y-1 overflow-y-auto hidden md:block">
         <button onclick="UI.navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-indigo-400 bg-indigo-950/50 border border-indigo-900/50">
           <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
@@ -127,33 +98,12 @@
         <button onclick="UI.navigate('ranking')" id="nav-ranking" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
           <i data-lucide="trophy" class="w-5 h-5"></i> Ranking Vendedores
         </button>
-        <button onclick="UI.navigate('fechamento')" id="nav-fechamento" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="lock" class="w-5 h-5"></i> Fechamento Diário
-        </button>
-        <button onclick="UI.navigate('historico')" id="nav-historico" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="history" class="w-5 h-5"></i> Histórico
-        </button>
-        <button onclick="UI.navigate('relatorios')" id="nav-relatorios" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Relatórios
-        </button>
-        <button onclick="UI.navigate('whatsapp')" id="nav-whatsapp" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="message-square" class="w-5 h-5"></i> WhatsApp
-        </button>
-        <button onclick="UI.navigate('usuarios')" id="nav-usuarios" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="users" class="w-5 h-5"></i> Usuários
-        </button>
-        <button onclick="UI.navigate('configuracoes')" id="nav-configuracoes" class="nav-item nav-admin w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-          <i data-lucide="settings" class="w-5 h-5"></i> Configurações
-        </button>
       </nav>
 
-      <!-- RODAPÉ DA SIDEBAR / USUÁRIO -->
       <div class="p-4 border-t border-slate-800">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3 min-w-0">
-            <div id="user-avatar" class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs flex-shrink-0">
-              US
-            </div>
+            <div id="user-avatar" class="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center font-bold text-white text-xs flex-shrink-0">US</div>
             <div class="min-w-0">
               <p id="user-name-display" class="text-xs font-semibold text-white truncate">Usuário</p>
               <p id="user-role-display" class="text-[10px] text-slate-400 uppercase font-mono tracking-wider">CAIXA</p>
@@ -166,399 +116,57 @@
       </div>
     </aside>
 
-    <!-- ÁREA DE CONTEÚDO PRINCIPAL -->
+    <!-- ÁREA PRINCIPAL DE CONTEÚDO -->
     <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-y-auto">
-      
-      <!-- TOPBAR SUPERIOR -->
       <header class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between gap-4 no-print sticky top-0 z-10 shadow-sm">
-        <div class="flex items-center gap-3">
-          <h1 id="page-title" class="text-xl font-bold text-slate-900">Dashboard</h1>
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
-            v1.2
-          </span>
-          <span id="realtime-badge" class="hidden md:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            Sincronizado
-          </span>
-        </div>
-
-        <!-- BOTOES DE DEMONSTRAÇÃO E AÇÕES RÁPIDAS -->
-        <div class="flex items-center gap-2">
-          <button onclick="DemoService.loadDemoData()" title="Carregar Dados de Demonstração" class="px-3 py-1.5 text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100 rounded-lg transition border border-indigo-200 flex items-center gap-1.5">
-            <i data-lucide="database" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Carregar Demo</span>
-          </button>
-          <button onclick="DemoService.clearDemoData()" title="Limpar Dados de Demonstração" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 text-slate-600 hover:bg-rose-50 hover:text-rose-700 rounded-lg transition border border-slate-200 flex items-center gap-1.5">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline">Limpar Demo</span>
-          </button>
-        </div>
+        <h1 id="page-title" class="text-xl font-bold text-slate-900">Dashboard</h1>
+        <span id="realtime-badge" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Supabase Conectado
+        </span>
       </header>
 
-      <!-- CONTAINER DAS VIEWS/TELAS -->
       <div id="content-area" class="p-4 md:p-8 flex-1">
-
-        <!-- ========================================
-             VIEW: DASHBOARD PRINCIPAL
-        ======================================== -->
-        <div id="view-dashboard" class="space-y-6">
-          
-          <!-- FILTROS DO DASHBOARD -->
-          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-3 items-center justify-between">
-            <div class="flex flex-wrap items-center gap-2">
-              <button onclick="DashboardController.setFilter('today')" class="dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-indigo-600 bg-indigo-600 text-white">Hoje</button>
-              <button onclick="DashboardController.setFilter('yesterday')" class="dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Ontem</button>
-              <button onclick="DashboardController.setFilter('week')" class="dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Esta Semana</button>
-              <button onclick="DashboardController.setFilter('month')" class="dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Este Mês</button>
-              <button onclick="DashboardController.setFilter('last_month')" class="dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50">Mês Anterior</button>
-            </div>
-            <div class="text-xs text-slate-500 font-medium" id="dash-filter-period-display">
-              Exibindo dados de Hoje
-            </div>
-          </div>
-
-          <!-- CARDS KPIS PRINCIPAIS -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-              <div class="flex items-center justify-between text-slate-500">
-                <span class="text-xs font-semibold uppercase tracking-wider">Faturamento Total</span>
-                <div class="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
-              </div>
-              <p id="kpi-faturamento-total" class="text-2xl font-bold font-mono text-slate-900">R$ 0,00</p>
-              <p class="text-[11px] text-slate-400">Total acumulado no período</p>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-              <div class="flex items-center justify-between text-slate-500">
-                <span class="text-xs font-semibold uppercase tracking-wider">Faturamento Loja</span>
-                <div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><i data-lucide="store" class="w-5 h-5"></i></div>
-              </div>
-              <p id="kpi-faturamento-loja" class="text-2xl font-bold font-mono text-slate-900">R$ 0,00</p>
-              <p class="text-[11px] text-slate-400">Vendas presenciais</p>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-              <div class="flex items-center justify-between text-slate-500">
-                <span class="text-xs font-semibold uppercase tracking-wider">Total iFood</span>
-                <div class="p-2 bg-orange-50 text-orange-600 rounded-lg"><i data-lucide="utensils" class="w-5 h-5"></i></div>
-              </div>
-              <p id="kpi-faturamento-ifood" class="text-2xl font-bold font-mono text-slate-900">R$ 0,00</p>
-              <p class="text-[11px] text-slate-400">Vendas via aplicativo delivery</p>
-            </div>
-
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
-              <div class="flex items-center justify-between text-slate-500">
-                <span class="text-xs font-semibold uppercase tracking-wider">Média Diária</span>
-                <div class="p-2 bg-blue-50 text-blue-600 rounded-lg"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
-              </div>
-              <p id="kpi-media-diaria" class="text-2xl font-bold font-mono text-slate-900">R$ 0,00</p>
-              <p class="text-[11px] text-slate-400">Por dia com faturamento</p>
-            </div>
-          </div>
-
-          <!-- KPIS SECUNDÁRIOS: TURNO E EXTREMOS -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p class="text-xs text-slate-500 font-medium">Turno Manhã</p>
-                <p id="kpi-faturamento-manha" class="text-lg font-bold font-mono text-amber-600">R$ 0,00</p>
-              </div>
-              <div class="text-amber-500 bg-amber-50 p-2 rounded-lg">☀️</div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p class="text-xs text-slate-500 font-medium">Turno Noite</p>
-                <p id="kpi-faturamento-noite" class="text-lg font-bold font-mono text-indigo-600">R$ 0,00</p>
-              </div>
-              <div class="text-indigo-500 bg-indigo-50 p-2 rounded-lg">🌙</div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p class="text-xs text-slate-500 font-medium">Melhor Dia</p>
-                <p id="kpi-melhor-dia-val" class="text-sm font-bold font-mono text-emerald-600">R$ 0,00</p>
-                <p id="kpi-melhor-dia-data" class="text-[10px] text-slate-400">--/--/----</p>
-              </div>
-              <div class="text-emerald-500 bg-emerald-50 p-2 rounded-lg"><i data-lucide="award" class="w-4 h-4"></i></div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
-              <div>
-                <p class="text-xs text-slate-500 font-medium">Menor Dia</p>
-                <p id="kpi-menor-dia-val" class="text-sm font-bold font-mono text-rose-600">R$ 0,00</p>
-                <p id="kpi-menor-dia-data" class="text-[10px] text-slate-400">--/--/----</p>
-              </div>
-              <div class="text-rose-500 bg-rose-50 p-2 rounded-lg"><i data-lucide="arrow-down-right" class="w-4 h-4"></i></div>
-            </div>
-          </div>
-
-          <!-- SEÇÃO DE GRÁFICOS -->
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            <!-- GRÁFICO 1: EVOLUÇÃO DIÁRIA -->
-            <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i data-lucide="line-chart" class="w-4 h-4 text-indigo-600"></i> Evolução do Faturamento Diário
-              </h3>
-              <div class="h-64 relative">
-                <canvas id="chart-faturamento-dia"></canvas>
-              </div>
-            </div>
-
-            <!-- GRÁFICO 2: FORMAS DE PAGAMENTO -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-600"></i> Formas de Pagamento
-              </h3>
-              <div class="h-64 relative flex items-center justify-center">
-                <canvas id="chart-formas-pagamento"></canvas>
-              </div>
-            </div>
-
-            <!-- GRÁFICO 3: MANHÃ X NOITE -->
-            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i data-lucide="sun-moon" class="w-4 h-4 text-indigo-600"></i> Comparativo Turnos (Manhã x Noite)
-              </h3>
-              <div class="h-64 relative flex items-center justify-center">
-                <canvas id="chart-turnos"></canvas>
-              </div>
-            </div>
-
-            <!-- GRÁFICO 4: LOJA X IFOOD -->
-            <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
-              <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <i data-lucide="shopping-bag" class="w-4 h-4 text-indigo-600"></i> Comparativo Canais (Loja x iFood)
-              </h3>
-              <div class="h-64 relative">
-                <canvas id="chart-canais"></canvas>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
-        <!-- ========================================
-             VIEW: LANÇAMENTO DE CAIXA
-        ======================================== -->
-        <div id="view-lancar" class="hidden space-y-6">
-          
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            
-            <!-- SELETOR DE ABAS DE TURNO -->
-            <div class="flex border-b border-slate-200 bg-slate-50/50">
-              <button onclick="CashController.switchShift('MANHA')" id="tab-btn-manha" class="flex-1 py-4 text-center font-semibold text-sm border-b-2 border-amber-500 text-amber-700 bg-white flex justify-center items-center gap-2 transition">
-                ☀️ Turno da Manhã
-              </button>
-              <button onclick="CashController.switchShift('NOITE')" id="tab-btn-noite" class="flex-1 py-4 text-center font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex justify-center items-center gap-2 transition">
-                🌙 Turno da Noite
-              </button>
-            </div>
-
-            <form id="form-cash-entry" onsubmit="CashController.save(event)" class="p-6 space-y-6">
-              
-              <!-- DADOS DO HEADER DO TURNO -->
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Data do Lançamento</label>
-                  <input type="date" id="entry-date" onchange="CashController.onDateOrShiftChange()" required class="w-full p-2.5 border border-slate-300 rounded-lg bg-white text-sm font-medium text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Turno Selecionado</label>
-                  <input type="text" id="entry-shift-display" readonly value="MANHÃ" class="w-full p-2.5 border border-slate-200 rounded-lg bg-slate-100 text-sm font-bold text-indigo-900 outline-none">
-                </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 uppercase mb-1">Caixa Responsável</label>
-                  <input type="text" id="entry-cashier-name" required placeholder="Nome do operador" class="w-full p-2.5 border border-slate-300 rounded-lg bg-white text-sm text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none">
-                </div>
-              </div>
-
-              <!-- CAMPOS VALORES MONETÁRIOS -->
-              <div>
-                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-4">Valores em Caixa (Formas de Pagamento)</h4>
-                
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">💵 Dinheiro (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-cash" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                  </div>
-
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">💳 Crédito (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-credit" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                  </div>
-
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">💳 Débito (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-debit" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                  </div>
-
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">📱 PIX (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-pix" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                  </div>
-
-                  <div>
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">📄 Sem Pagamento (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-nopayment" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                  </div>
-
-                  <!-- CAMPO DINÂMICO COUVERT (EXIBIDO NO NOITE OU CONFORME CONFIG) -->
-                  <div id="field-couvert-wrapper">
-                    <label id="lbl-couvert" class="block text-xs font-semibold text-slate-700 mb-1">🍽️ Couvert (R$)</label>
-                    <input type="number" step="0.01" min="0" id="in-couvert" oninput="CashController.calculate()" class="w-full p-3 border border-slate-300 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-indigo-500 outline-none" placeholder="0,00">
-                    <p id="couvert-calc-preview" class="text-[10px] text-slate-400 mt-1 text-right font-mono"></p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- CAMPO SEPARADO IFOOD -->
-              <div class="border-t border-slate-200 pt-4">
-                <div class="max-w-xs">
-                  <label class="block text-xs font-bold text-orange-700 mb-1">🍔 iFood / Delivery (R$)</label>
-                  <input type="number" step="0.01" min="0" id="in-ifood" oninput="CashController.calculate()" class="w-full p-3 border border-orange-200 bg-orange-50/50 rounded-xl font-mono text-right text-slate-900 focus:ring-2 focus:ring-orange-500 outline-none" placeholder="0,00">
-                </div>
-              </div>
-
-              <!-- PAINEL DE RESUMO E CÁLCULO EM TEMPO REAL -->
-              <div class="bg-slate-900 text-white rounded-2xl p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 shadow-xl">
-                <div>
-                  <span class="text-xs uppercase tracking-wider text-slate-400 block font-semibold">Total Caixa Loja</span>
-                  <span id="display-total-caixa" class="text-2xl font-bold font-mono text-emerald-400">R$ 0,00</span>
-                  <p class="text-[10px] text-slate-400 mt-0.5">Soma de todas as formas de pagamento em loja</p>
-                </div>
-
-                <div class="sm:text-right">
-                  <span class="text-xs uppercase tracking-wider text-slate-400 block font-semibold">Total Geral do Turno</span>
-                  <span id="display-total-geral" class="text-2xl font-bold font-mono text-indigo-300">R$ 0,00</span>
-                  <p class="text-[10px] text-slate-400 mt-0.5">Total Caixa Loja + faturamento iFood</p>
-                </div>
-              </div>
-
-              <!-- BARRA DE BOTÕES E AÇÕES -->
-              <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
-                <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                  <button type="submit" id="btn-save-shift" class="flex-1 sm:flex-none px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-sm">
-                    <i data-lucide="save" class="w-4 h-4"></i> Salvar Turno
-                  </button>
-
-                  <button type="button" onclick="WhatsappController.generateAndOpenForCurrentShift()" class="flex-1 sm:flex-none px-4 py-3 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl shadow-lg shadow-green-600/20 transition flex items-center justify-center gap-2 text-sm">
-                    <i data-lucide="message-square" class="w-4 h-4"></i> Enviar p/ WhatsApp
-                  </button>
-                </div>
-
-                <div class="flex items-center gap-2 w-full sm:w-auto">
-                  <button type="button" onclick="CashController.duplicatePreviousDay()" class="flex-1 sm:flex-none px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition text-xs flex items-center justify-center gap-1.5 border border-slate-200">
-                    <i data-lucide="copy" class="w-3.5 h-3.5"></i> Duplicar Dia Anterior
-                  </button>
-
-                  <button type="button" onclick="CashController.clearForm()" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl transition text-xs">
-                    Limpar
-                  </button>
-                </div>
-              </div>
-
-            </form>
-
-          </div>
-
-          <!-- CONSOLIDADO RÁPIDO DA DATA SELECIONADA -->
-          <div id="quick-consolidated-panel" class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-            <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center justify-between">
-              <span>Consolidado Diário (<span id="quick-date-display">--/--/----</span>)</span>
-              <span id="quick-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-600">ABERTO</span>
-            </h3>
-
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-center">
-              <div class="p-3 bg-amber-50/50 rounded-xl border border-amber-100">
-                <span class="text-xs text-amber-800 block">Total Manhã</span>
-                <span id="qc-total-manha" class="text-lg font-bold font-mono text-amber-900">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-indigo-50/50 rounded-xl border border-indigo-100">
-                <span class="text-xs text-indigo-800 block">Total Noite</span>
-                <span id="qc-total-noite" class="text-lg font-bold font-mono text-indigo-900">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-orange-50/50 rounded-xl border border-orange-100">
-                <span class="text-xs text-orange-800 block">Total iFood</span>
-                <span id="qc-total-ifood" class="text-lg font-bold font-mono text-orange-900">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-emerald-50/50 rounded-xl border border-emerald-100">
-                <span class="text-xs text-emerald-800 block">Total Geral Dia</span>
-                <span id="qc-total-geral" class="text-lg font-bold font-mono text-emerald-900">R$ 0,00</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
-        <!-- ========================================
-             VIEW: RANKING DE VENDEDORES (ESTILO RANKIFY)
-        ======================================== -->
-        <div id="view-ranking" class="hidden space-y-6">
+        
+        <!-- VIEW: RANKING DE VENDEDORES -->
+        <div id="view-ranking" class="space-y-6">
           <div class="bg-slate-950 text-white p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-8">
-            
-            <!-- CABEÇALHO DO RANKING -->
             <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-800 pb-4">
               <div>
                 <h2 class="text-2xl font-black text-white tracking-wider flex items-center gap-2">
-                  <i data-lucide="trophy" class="w-7 h-7 text-amber-400"></i> RANKING DE VENDEDORES
+                  <i data-lucide="trophy" class="w-7 h-7 text-amber-400"></i> RANKING DE VENDEDORES (SUPABASE)
                 </h2>
-                <p class="text-xs text-slate-400">Acompanhamento de metas e performance do time de vendas</p>
+                <p class="text-xs text-slate-400">Dados sincronizados em tempo real com a nuvem</p>
               </div>
 
-              <div class="flex items-center gap-3">
-                <button onclick="RankingController.openFormModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
-                  <i data-lucide="plus-circle" class="w-4 h-4"></i> Lançar Venda (Admin)
-                </button>
-              </div>
+              <button onclick="RankingController.openFormModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 shadow-lg transition">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i> Lançar Venda (Admin)
+              </button>
             </div>
 
             <!-- PAINEL CENTRAL GAMIFICADO -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              <!-- PÓDIO TOP 3 VENDEDORES -->
               <div class="lg:col-span-2 bg-slate-900/80 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between">
                 <h3 class="text-xs font-bold text-indigo-400 uppercase tracking-widest mb-6">🏆 Pódio de Líderes</h3>
-                
                 <div id="ranking-podium" class="grid grid-cols-3 gap-3 items-end min-h-[220px]">
-                  <!-- Preenchido via JavaScript -->
+                  <!-- Preenchido via Supabase -->
                 </div>
               </div>
 
-              <!-- RESUMO DA META GERAL -->
               <div class="bg-slate-900/80 p-6 rounded-2xl border border-slate-800 flex flex-col justify-between space-y-4">
                 <h3 class="text-xs font-bold text-indigo-400 uppercase tracking-widest">🎯 Meta Geral da Equipe</h3>
-                
                 <div class="text-center space-y-2">
-                  <div class="inline-flex items-center justify-center p-4 rounded-full bg-indigo-950 border-2 border-indigo-500/30 text-indigo-400 mb-2">
-                    <i data-lucide="target" class="w-10 h-10"></i>
-                  </div>
                   <p class="text-xs text-slate-400">Realizado / Meta Total</p>
                   <p id="rank-meta-geral-valores" class="text-xl font-black font-mono text-emerald-400">R$ 0,00 / R$ 0,00</p>
-                  
-                  <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden mt-2 border border-slate-700">
+                  <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
                     <div id="rank-meta-geral-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-400 h-full transition-all duration-500" style="width: 0%"></div>
                   </div>
                   <p id="rank-meta-geral-pct" class="text-xs font-bold text-slate-300 font-mono">0% Atingido</p>
                 </div>
-
-                <div id="ranking-teams-cards" class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
-                  <!-- Cards das Equipes cadastrados via JS -->
-                </div>
               </div>
-
             </div>
 
-            <!-- TABELA DETALHADA DOS CLOSERS / VENDEDORES -->
+            <!-- TABELA DETALHADA -->
             <div class="bg-slate-900/80 rounded-2xl border border-slate-800 overflow-hidden">
-              <div class="p-4 border-b border-slate-800">
-                <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                  <i data-lucide="users" class="w-4 h-4 text-indigo-400"></i> Desempenho dos Closers / Vendedores
-                </h3>
-              </div>
-
               <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs border-collapse">
                   <thead>
@@ -572,608 +180,115 @@
                     </tr>
                   </thead>
                   <tbody id="ranking-table-body" class="divide-y divide-slate-800/60 font-medium text-slate-300">
-                    <!-- Preenchido via JavaScript -->
+                    <!-- Preenchido via Supabase JS -->
                   </tbody>
                 </table>
               </div>
             </div>
-
-          </div>
-        </div>
-
-        <!-- ========================================
-             MODAL LANÇAMENTO DE VENDEDOR / META
-        ======================================== -->
-        <div id="modal-ranking-form" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 text-white space-y-4 shadow-2xl">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-              <h3 class="font-bold text-base text-indigo-400">Lançar / Atualizar Vendedor</h3>
-              <button onclick="RankingController.closeFormModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <form onsubmit="RankingController.saveSeller(event)" class="space-y-4 text-xs">
-              <div>
-                <label class="block font-semibold text-slate-400 mb-1">Nome do Vendedor</label>
-                <input type="text" id="rank-input-name" required placeholder="Ex: Carlos" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white outline-none focus:border-indigo-500">
-              </div>
-
-              <div>
-                <label class="block font-semibold text-slate-400 mb-1">Equipe / Squad</label>
-                <input type="text" id="rank-input-team" placeholder="Ex: Iron Eagles" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white outline-none focus:border-indigo-500">
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="block font-semibold text-slate-400 mb-1">Meta (R$)</label>
-                  <input type="number" step="0.01" min="0" id="rank-input-target" required placeholder="15000.00" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono outline-none focus:border-indigo-500">
-                </div>
-
-                <div>
-                  <label class="block font-semibold text-slate-400 mb-1">Valor Vendido (R$)</label>
-                  <input type="number" step="0.01" min="0" id="rank-input-achieved" required placeholder="2850.00" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono outline-none focus:border-indigo-500">
-                </div>
-              </div>
-
-              <div class="pt-2 flex justify-end gap-2">
-                <button type="button" onclick="RankingController.closeFormModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl">Cancelar</button>
-                <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl">Salvar Vendedor</button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: FECHAMENTO DIÁRIO
-        ======================================== -->
-        <div id="view-fechamento" class="hidden space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-            
-            <div class="flex flex-wrap justify-between items-center gap-4 border-b border-slate-200 pb-4">
-              <div>
-                <h2 class="text-lg font-bold text-slate-900">Fechamento do Caixa Diário</h2>
-                <p class="text-xs text-slate-500">Confira a consolidação dos turnos para encerrar o dia financeiro</p>
-              </div>
-
-              <div class="flex items-center gap-3">
-                <input type="date" id="closing-date-select" onchange="ClosingController.loadDate()" class="p-2 border border-slate-300 rounded-lg text-sm font-semibold text-slate-800">
-              </div>
-            </div>
-
-            <!-- DETALHAMENTO DOS TURNOS -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              <!-- CARD MANHÃ -->
-              <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50 space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
-                  <span class="font-bold text-amber-700 flex items-center gap-2 text-sm">☀️ Turno da Manhã</span>
-                  <span id="closing-manha-status" class="text-xs font-semibold text-slate-400">Pendente</span>
-                </div>
-                <div id="closing-manha-details" class="space-y-1.5 text-xs font-mono text-slate-600">
-                  <p class="text-slate-400 italic font-sans">Nenhum lançamento registrado nesta data.</p>
-                </div>
-              </div>
-
-              <!-- CARD NOITE -->
-              <div class="border border-slate-200 rounded-xl p-5 bg-slate-50/50 space-y-3">
-                <div class="flex justify-between items-center border-b pb-2">
-                  <span class="font-bold text-indigo-700 flex items-center gap-2 text-sm">🌙 Turno da Noite</span>
-                  <span id="closing-noite-status" class="text-xs font-semibold text-slate-400">Pendente</span>
-                </div>
-                <div id="closing-noite-details" class="space-y-1.5 text-xs font-mono text-slate-600">
-                  <p class="text-slate-400 italic font-sans">Nenhum lançamento registrado nesta data.</p>
-                </div>
-              </div>
-
-            </div>
-
-            <!-- RESUMO DO TOTAL DO DIA -->
-            <div class="bg-indigo-950 text-white p-6 rounded-xl space-y-4">
-              <div class="flex justify-between items-center border-b border-indigo-900 pb-3">
-                <span class="text-xs uppercase font-semibold text-indigo-300">Resumo Consolidado</span>
-                <span id="closing-status-badge" class="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">ABERTO</span>
-              </div>
-
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-                <div>
-                  <span class="text-indigo-400 block">Total Caixa Loja:</span>
-                  <span id="closing-resumo-loja" class="text-base font-bold font-mono">R$ 0,00</span>
-                </div>
-                <div>
-                  <span class="text-indigo-400 block">Total iFood:</span>
-                  <span id="closing-resumo-ifood" class="text-base font-bold font-mono text-orange-400">R$ 0,00</span>
-                </div>
-                <div class="col-span-2 text-right">
-                  <span class="text-indigo-300 block font-semibold">FATURAMENTO TOTAL DO DIA:</span>
-                  <span id="closing-resumo-total" class="text-2xl font-black font-mono text-emerald-400">R$ 0,00</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- AÇÕES DE FECHAMENTO / REABERTURA -->
-            <div class="flex flex-wrap justify-between items-center gap-4 pt-2">
-              <div id="closing-info-footer" class="text-xs text-slate-500"></div>
-
-              <div class="flex items-center gap-3">
-                <button id="btn-execute-close" onclick="ClosingController.executeClose()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow transition text-sm flex items-center gap-2">
-                  <i data-lucide="lock" class="w-4 h-4"></i> Fechar Caixa deste Dia
-                </button>
-
-                <button id="btn-execute-reopen" onclick="ClosingController.executeReopen()" class="hidden px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-xl shadow transition text-sm flex items-center gap-2">
-                  <i data-lucide="unlock" class="w-4 h-4"></i> Reabrir Dia (Admin)
-                </button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: HISTÓRICO DE DIAS E TURNOS
-        ======================================== -->
-        <div id="view-historico" class="hidden space-y-6">
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-            
-            <div class="p-5 border-b border-slate-200 flex flex-wrap gap-4 items-center justify-between">
-              <h2 class="text-base font-bold text-slate-900">Histórico de Caixas Registrados</h2>
-              
-              <div class="flex items-center gap-3">
-                <input type="text" id="hist-search" oninput="HistoryController.render()" placeholder="Buscar por caixa ou data..." class="p-2 border rounded-lg text-xs w-48">
-                <button onclick="HistoryController.exportCSV()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
-                  <i data-lucide="download" class="w-3.5 h-3.5"></i> Exportar CSV
-                </button>
-              </div>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-slate-50 text-[11px] font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200">
-                    <th class="p-4">Data</th>
-                    <th class="p-4">Status</th>
-                    <th class="p-4 text-right">Caixa Manhã</th>
-                    <th class="p-4 text-right">Caixa Noite</th>
-                    <th class="p-4 text-right">Total iFood</th>
-                    <th class="p-4 text-right">Total do Dia</th>
-                    <th class="p-4 text-center">Ações</th>
-                  </tr>
-                </thead>
-                <tbody id="table-history-body" class="divide-y divide-slate-100 text-xs font-medium text-slate-700">
-                  <!-- Inserido dinamicamente -->
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: RELATÓRIOS E EXPORTAÇÃO
-        ======================================== -->
-        <div id="view-relatorios" class="hidden space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 no-print">
-            <div class="flex flex-wrap justify-between items-center gap-4">
-              <div>
-                <h2 class="text-lg font-bold text-slate-900">Gerador de Relatórios Financeiros</h2>
-                <p class="text-xs text-slate-500">Selecione o período para consolidação para impressão ou exportação</p>
-              </div>
-
-              <div class="flex flex-wrap items-center gap-3">
-                <input type="date" id="rep-start" class="p-2 border rounded-lg text-xs">
-                <span class="text-xs text-slate-400">até</span>
-                <input type="date" id="rep-end" class="p-2 border rounded-lg text-xs">
-                <button onclick="ReportsController.generate()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-xs transition">
-                  Filtrar Relatório
-                </button>
-                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-lg text-xs transition flex items-center gap-1.5">
-                  <i data-lucide="printer" class="w-3.5 h-3.5"></i> Imprimir / PDF
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- ÁREA IMPRESSÍVEL DO RELATÓRIO -->
-          <div id="printable-area" class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-            <div class="border-b pb-4 flex justify-between items-start">
-              <div>
-                <h1 class="text-xl font-bold text-slate-900">Relatório Consolidado de Fluxo de Caixa</h1>
-                <p id="rep-period-label" class="text-xs text-slate-500 mt-1">Período: --/--/---- até --/--/----</p>
-              </div>
-              <div class="text-right">
-                <p class="font-bold text-indigo-900 text-sm" id="rep-company-label">Minha Empresa</p>
-                <p class="text-[10px] text-slate-400">Emissão: <span id="rep-emission-date">--/--/----</span></p>
-              </div>
-            </div>
-
-            <!-- CARDS DE RESUMO DO RELATÓRIO -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs">
-              <div class="p-3 bg-slate-50 rounded-lg border">
-                <span class="text-slate-500 block">Faturamento Loja</span>
-                <span id="rep-total-loja" class="text-base font-bold font-mono text-slate-900">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-slate-50 rounded-lg border">
-                <span class="text-slate-500 block">Faturamento iFood</span>
-                <span id="rep-total-ifood" class="text-base font-bold font-mono text-orange-600">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-slate-50 rounded-lg border">
-                <span class="text-slate-500 block">Total Geral</span>
-                <span id="rep-total-geral" class="text-base font-bold font-mono text-indigo-900">R$ 0,00</span>
-              </div>
-              <div class="p-3 bg-slate-50 rounded-lg border">
-                <span class="text-slate-500 block">Média Diária</span>
-                <span id="rep-media-diaria" class="text-base font-bold font-mono text-emerald-600">R$ 0,00</span>
-              </div>
-            </div>
-
-            <!-- TABELA DETALHADA -->
-            <div>
-              <h3 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3">Detalhamento Diário</h3>
-              <table class="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr class="border-b border-slate-300 font-bold text-slate-700 bg-slate-50">
-                    <th class="p-2">Data</th>
-                    <th class="p-2 text-right">Manhã (R$)</th>
-                    <th class="p-2 text-right">Noite (R$)</th>
-                    <th class="p-2 text-right">iFood (R$)</th>
-                    <th class="p-2 text-right">Total Dia (R$)</th>
-                  </tr>
-                </thead>
-                <tbody id="rep-table-body" class="divide-y divide-slate-200">
-                  <!-- Preenchido via JS -->
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: WHATSAPP (v1.2 - Suporte para 5 Números)
-        ======================================== -->
-        <div id="view-whatsapp" class="hidden space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-3xl space-y-6">
-            <div class="flex items-center justify-between">
-              <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                <i data-lucide="message-square" class="w-5 h-5 text-green-600"></i> Disparo de Lançamentos via WhatsApp (v1.2)
-              </h2>
-              <span class="px-2.5 py-1 bg-green-50 text-green-700 font-bold text-xs rounded-full border border-green-200">5 Contatos</span>
-            </div>
-
-            <form onsubmit="WhatsappController.saveConfig(event)" class="space-y-4">
-              <p class="text-xs text-slate-500">Cadastre até 5 números de WhatsApp para receberem os relatórios de lançamentos de caixa.</p>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                <div>
-                  <label class="block font-semibold text-slate-700 mb-1">1. Número Principal (Obrigatório)</label>
-                  <input type="text" id="wa-phone-1" placeholder="Ex: 5581999999999" required class="w-full p-2.5 border rounded-xl font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none">
-                </div>
-
-                <div>
-                  <label class="block font-semibold text-slate-700 mb-1">2. Número Secundário</label>
-                  <input type="text" id="wa-phone-2" placeholder="Ex: 5581988888888" class="w-full p-2.5 border rounded-xl font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none">
-                </div>
-
-                <div>
-                  <label class="block font-semibold text-slate-700 mb-1">3. Número Adicional</label>
-                  <input type="text" id="wa-phone-3" placeholder="Ex: 5581977777777" class="w-full p-2.5 border rounded-xl font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none">
-                </div>
-
-                <div>
-                  <label class="block font-semibold text-slate-700 mb-1">4. Número Adicional</label>
-                  <input type="text" id="wa-phone-4" placeholder="Ex: 5581966666666" class="w-full p-2.5 border rounded-xl font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none">
-                </div>
-
-                <div class="md:col-span-2">
-                  <label class="block font-semibold text-slate-700 mb-1">5. Número Adicional</label>
-                  <input type="text" id="wa-phone-5" placeholder="Ex: 5581955555555" class="w-full p-2.5 border rounded-xl font-mono text-sm focus:ring-2 focus:ring-green-500 outline-none">
-                </div>
-              </div>
-
-              <div class="pt-2 flex justify-end">
-                <button type="submit" class="px-5 py-2.5 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-xl text-xs shadow flex items-center gap-2">
-                  <i data-lucide="save" class="w-4 h-4"></i> Salvar 5 Números
-                </button>
-              </div>
-            </form>
-
-            <hr class="my-4">
-
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-2">Pré-visualização do Envio Atual</label>
-              <div id="wa-preview-box" class="bg-slate-900 text-emerald-400 p-4 rounded-xl font-mono text-xs whitespace-pre-wrap leading-relaxed mb-4">
-                Aguardando geração de mensagem...
-              </div>
-
-              <div id="wa-numbers-actions" class="flex flex-wrap gap-2">
-                <!-- Botões para disparo individual inseridos via JS -->
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: GESTÃO DE USUÁRIOS (Gerenciado no Menu Admin)
-        ======================================== -->
-        <div id="view-usuarios" class="hidden space-y-6">
-          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
-            <div class="flex justify-between items-center">
-              <div>
-                <h2 class="text-lg font-bold text-slate-900">Gestão de Usuários e Permissões</h2>
-                <p class="text-xs text-slate-500">Visualização exclusiva do administrador do sistema</p>
-              </div>
-              <button onclick="UI.openNewUserModal()" class="px-4 py-2 bg-indigo-600 text-white font-semibold rounded-xl text-xs flex items-center gap-1.5 shadow">
-                <i data-lucide="user-plus" class="w-4 h-4"></i> Novo Usuário
-              </button>
-            </div>
-
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs">
-                <thead>
-                  <tr class="border-b bg-slate-50 text-slate-500 font-semibold uppercase">
-                    <th class="p-3">Nome</th>
-                    <th class="p-3">E-mail</th>
-                    <th class="p-3">Perfil</th>
-                    <th class="p-3">Status</th>
-                  </tr>
-                </thead>
-                <tbody id="users-table-body" class="divide-y">
-                  <!-- Preenchido via JS -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
-        <!-- ========================================
-             VIEW: CONFIGURAÇÕES DA EMPRESA
-        ======================================== -->
-        <div id="view-configuracoes" class="hidden space-y-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm max-w-xl space-y-6">
-            <h2 class="text-lg font-bold text-slate-900">Configurações Gerais do Sistema</h2>
-
-            <form onsubmit="ConfigController.save(event)" class="space-y-4 text-sm">
-              <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Nome da Empresa</label>
-                <input type="text" id="cfg-company-name" required class="w-full p-2.5 border rounded-lg">
-              </div>
-
-              <div class="border-t pt-4">
-                <label class="block text-xs font-bold text-slate-700 mb-2">Regra do Couvert (Turno Noite)</label>
-                <div class="space-y-2">
-                  <label class="flex items-center gap-2">
-                    <input type="radio" name="cfgCouvertType" value="FINANCEIRO" id="cfg-couvert-fin">
-                    <span>Couvert como Valor Monetário Direto (R$)</span>
-                  </label>
-                  <label class="flex items-center gap-2">
-                    <input type="radio" name="cfgCouvertType" value="QUANTIDADE" id="cfg-couvert-qty">
-                    <span>Couvert por Quantidade × Valor Unitário</span>
-                  </label>
-                </div>
-              </div>
-
-              <div id="cfg-couvert-unit-wrapper" class="pl-6">
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Valor Unitário do Couvert (R$)</label>
-                <input type="number" step="0.01" min="0" id="cfg-couvert-price" class="w-full p-2 border rounded-lg font-mono text-right">
-              </div>
-
-              <button type="submit" class="px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl text-xs shadow">
-                Salvar Configurações
-              </button>
-            </form>
           </div>
         </div>
 
       </div>
-
     </main>
-
   </div>
 
-  <!-- ========================================
-       SISTEMA JAVASCRIPT REFACTORIZADO (v1.2)
-  ======================================== -->
+  <!-- MODAL LANÇAMENTO -->
+  <div id="modal-ranking-form" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 text-white space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-indigo-400">Lançar / Atualizar Vendedor</h3>
+        <button onclick="RankingController.closeFormModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form onsubmit="RankingController.saveSeller(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Nome do Vendedor</label>
+          <input type="text" id="rank-input-name" required placeholder="Ex: Carlos" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white outline-none focus:border-indigo-500">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-400 mb-1">Equipe / Squad</label>
+          <input type="text" id="rank-input-team" placeholder="Ex: Iron Eagles" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white outline-none focus:border-indigo-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-400 mb-1">Meta (R$)</label>
+            <input type="number" step="0.01" min="0" id="rank-input-target" required placeholder="15000.00" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono outline-none focus:border-indigo-500">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-400 mb-1">Valor Vendido (R$)</label>
+            <input type="number" step="0.01" min="0" id="rank-input-achieved" required placeholder="2850.00" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="RankingController.closeFormModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl">Cancelar</button>
+          <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl">Salvar Vendedor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT DE INTEGRAÇÃO SUPABASE -->
   <script>
     /* ==========================================================================
-       1. ESTADO GLOBAL E BANCO DE DADOS EM MEMÓRIA / STORAGE
+       CONFIGURAÇÃO DE CONEXÃO AO SUPABASE
        ========================================================================== */
-    const DB_KEYS = {
-      USERS: 'fci_users',
-      COMPANY: 'fci_company',
-      ENTRIES: 'fci_entries',
-      CLOSINGS: 'fci_closings',
-      SESSION: 'fci_session',
-      RANKING: 'fci_ranking'
+    const SUPABASE_URL = 'https://SEU-PROJETO.supabase.co';
+    const SUPABASE_KEY = 'SUA-CHAVE-ANON-PUBLIC';
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    /* UI HELPERS */
+    const UI = {
+      initApp() {
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        RankingController.render();
+      },
+      navigate(view) {
+        document.getElementById('view-ranking').classList.remove('hidden');
+      }
     };
 
-    const INITIAL_USERS = [
-      { id: '1', name: 'Administrador Geral', email: 'admin@sistema.com', passwordHash: 'admin', role: 'ADMIN', active: true },
-      { id: '2', name: 'João (Caixa Manhã)', email: 'joao@sistema.com', passwordHash: '123', role: 'CAIXA', active: true },
-      { id: '3', name: 'Maria (Caixa Noite)', email: 'maria@sistema.com', passwordHash: '123', role: 'CAIXA', active: true }
-    ];
-
-    const INITIAL_COMPANY = {
-      id: 'comp-1',
-      name: 'Restaurante & Bar Inteligente',
-      couvertType: 'FINANCEIRO', // 'FINANCEIRO' ou 'QUANTIDADE'
-      couvertUnitPrice: 10.00,
-      whatsappNumbers: ['5581999999999', '', '', '', ''] // Array com até 5 números na v1.2
-    };
-
-    const INITIAL_RANKING = [
-      { id: 'rk-1', name: 'Carlos', team: 'King Lions', target: 15000, achieved: 2853 },
-      { id: 'rk-2', name: 'Ruan', team: 'Iron Eagles', target: 15000, achieved: 2711 },
-      { id: 'rk-3', name: 'Milena', team: 'Wolves Street', target: 15000, achieved: 1814 }
-    ];
-
-    /* ==========================================================================
-       2. SERVICE LAYER (STORAGE E MOCK DE BANCO DE DADOS)
-       ========================================================================== */
-    class StorageService {
-      static get(key, defaultValue) {
-        try {
-          const data = localStorage.getItem(key);
-          return data ? JSON.parse(data) : defaultValue;
-        } catch (e) {
-          console.error("Erro ao ler do LocalStorage", e);
-          return defaultValue;
-        }
-      }
-
-      static set(key, value) {
-        try {
-          localStorage.setItem(key, JSON.stringify(value));
-          // Simulação de acionamento em tempo real
-          RealtimeService.notify(key);
-        } catch (e) {
-          console.error("Erro ao gravar no LocalStorage", e);
-        }
-      }
-    }
-
-    class RealtimeService {
-      static listeners = [];
-
-      static subscribe(callback) {
-        this.listeners.push(callback);
-      }
-
-      static notify(key) {
-        this.listeners.forEach(cb => cb(key));
-      }
-    }
-
-    /* ==========================================================================
-       3. AUTENTICAÇÃO E PERMISSÕES (AUTH SERVICE)
-       ========================================================================== */
     class AuthService {
-      static getCurrentUser() {
-        return StorageService.get(DB_KEYS.SESSION, null);
-      }
-
-      static login(event) {
-        event.preventDefault();
-        const email = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value;
-
-        const users = StorageService.get(DB_KEYS.USERS, INITIAL_USERS);
-        const user = users.find(u => u.email === email && u.passwordHash === password);
-
-        if (!user) {
-          alert('E-mail ou senha inválidos.');
-          return;
-        }
-
-        if (!user.active) {
-          alert('Usuário inativo. Entre em contato com o Administrador.');
-          return;
-        }
-
-        StorageService.set(DB_KEYS.SESSION, user);
-        UI.initApp();
-      }
-
-      static logout() {
-        StorageService.set(DB_KEYS.SESSION, null);
-        window.location.reload();
-      }
-
-      static checkAccess(requiredRole) {
-        const user = this.getCurrentUser();
-        if (!user) return false;
-        if (user.role === 'ADMIN') return true;
-        if (requiredRole === 'GESTOR' && user.role === 'GESTOR') return true;
-        return user.role === requiredRole;
-      }
+      static getCurrentUser() { return { id: 'admin', role: 'ADMIN' }; }
+      static login(e) { e.preventDefault(); UI.initApp(); }
+      static logout() { window.location.reload(); }
+      static checkAccess() { return true; }
     }
 
-    /* ==========================================================================
-       4. CÁLCULOS FINANCEIROS E REGRAS DE NEGÓCIO (FINANCE SERVICE)
-       ========================================================================== */
     class FinanceService {
       static formatCurrency(val) {
         return (val || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
       }
-
-      static parseVal(val) {
-        const parsed = parseFloat(val);
-        return isNaN(parsed) || parsed < 0 ? 0 : parsed;
-      }
-
-      static calculateShiftTotals(input, companyConfig) {
-        const cash = this.parseVal(input.cash);
-        const credit = this.parseVal(input.credit);
-        const debit = this.parseVal(input.debit);
-        const pix = this.parseVal(input.pix);
-        const noPayment = this.parseVal(input.noPayment);
-        const ifood = this.parseVal(input.ifood);
-        const couvertRaw = this.parseVal(input.couvert);
-
-        let couvertTotal = 0;
-        if (companyConfig.couvertType === 'QUANTIDADE') {
-          couvertTotal = couvertRaw * (companyConfig.couvertUnitPrice || 0);
-        } else {
-          couvertTotal = couvertRaw;
-        }
-
-        const totalCaixa = cash + credit + debit + pix + noPayment + couvertTotal;
-        const totalGeral = totalCaixa + ifood;
-
-        return {
-          cash,
-          credit,
-          debit,
-          pix,
-          noPayment,
-          ifood,
-          couvertRaw,
-          couvertTotal,
-          totalCaixa: Number(totalCaixa.toFixed(2)),
-          totalGeral: Number(totalGeral.toFixed(2))
-        };
-      }
-
-      static consolidateDay(entries, dateStr) {
-        const dayEntries = entries.filter(e => e.date === dateStr);
-        const morning = dayEntries.find(e => e.shift === 'MANHA');
-        const night = dayEntries.find(e => e.shift === 'NOITE');
-
-        const totalMorning = morning ? morning.totalCaixa : 0;
-        const totalNight = night ? night.totalCaixa : 0;
-        const totalIfood = (morning ? morning.ifood : 0) + (night ? night.ifood : 0);
-        const totalStore = totalMorning + totalNight;
-        const totalDay = totalStore + totalIfood;
-
-        return {
-          date: dateStr,
-          morning,
-          night,
-          totalMorning,
-          totalNight,
-          totalIfood,
-          totalStore,
-          totalDay
-        };
-      }
     }
 
     /* ==========================================================================
-       5. CONTROLLERS DAS VIEWS
+       RANKING CONTROLLER INTEGRADOR SUPABASE
        ========================================================================== */
-
-    // --- RANKING CONTROLLER (NOVO - ADMIN) ---
     class RankingController {
       static editingId = null;
 
-      static render() {
-        const sellers = StorageService.get(DB_KEYS.RANKING, INITIAL_RANKING);
-        sellers.sort((a, b) => b.achieved - a.achieved);
+      // Buscar vendedores diretamente da tabela rankings do Supabase
+      static async render() {
+        const { data: sellers, error } = await supabase
+          .from('rankings')
+          .select('*')
+          .order('achieved', { ascending: false });
+
+        if (error) {
+          console.error("Erro ao carregar ranking do Supabase:", error);
+          return;
+        }
 
         // Renderizar Pódio TOP 3
         const podiumEl = document.getElementById('ranking-podium');
         podiumEl.innerHTML = '';
+        const podiumOrder = [sellers[1], sellers[0], sellers[2]];
 
-        const podiumOrder = [sellers[1], sellers[0], sellers[2]]; // 2º Lugar, 1º Lugar, 3º Lugar
-
-        podiumOrder.forEach((item, idx) => {
+        podiumOrder.forEach((item) => {
           if (!item) {
             podiumEl.innerHTML += `<div></div>`;
             return;
@@ -1201,20 +316,12 @@
           `;
         });
 
-        // Totais e Metas da Equipe Geral
+        // Cálculo de Metas Gerais
         let metaGeral = 0;
         let realizadoGeral = 0;
-        const teamsMap = {};
-
         sellers.forEach(s => {
           metaGeral += s.target || 0;
           realizadoGeral += s.achieved || 0;
-
-          if (s.team) {
-            if (!teamsMap[s.team]) teamsMap[s.team] = { name: s.team, target: 0, achieved: 0 };
-            teamsMap[s.team].target += s.target || 0;
-            teamsMap[s.team].achieved += s.achieved || 0;
-          }
         });
 
         const pctGeral = metaGeral > 0 ? Math.round((realizadoGeral / metaGeral) * 100) : 0;
@@ -1222,20 +329,7 @@
         document.getElementById('rank-meta-geral-pct').innerText = `${pctGeral}% Atingido`;
         document.getElementById('rank-meta-geral-bar').style.width = `${Math.min(pctGeral, 100)}%`;
 
-        // Renderizar Cards das Equipes
-        const teamsContainer = document.getElementById('ranking-teams-cards');
-        teamsContainer.innerHTML = '';
-        Object.values(teamsMap).forEach(t => {
-          teamsContainer.innerHTML += `
-            <div class="p-2 bg-slate-950 rounded-xl border border-slate-800 text-left space-y-1">
-              <p class="font-bold text-[10px] text-indigo-400 uppercase truncate">${t.name}</p>
-              <p class="text-[10px] text-slate-400 font-mono">Meta: ${FinanceService.formatCurrency(t.target)}</p>
-              <p class="text-[10px] text-emerald-400 font-mono font-bold">Total: ${FinanceService.formatCurrency(t.achieved)}</p>
-            </div>
-          `;
-        });
-
-        // Tabela Completa de Vendedores
+        // Renderizar Tabela Completa
         const tbody = document.getElementById('ranking-table-body');
         tbody.innerHTML = '';
 
@@ -1265,19 +359,12 @@
         lucide.createIcons();
       }
 
-      static openFormModal(id = null) {
-        if (!AuthService.checkAccess('ADMIN')) {
-          alert('Apenas o Administrador pode cadastrar/alterar rankings.');
-          return;
-        }
-
+      static async openFormModal(id = null) {
         this.editingId = id;
-        const modal = document.getElementById('modal-ranking-form');
-        modal.classList.remove('hidden');
+        document.getElementById('modal-ranking-form').classList.remove('hidden');
 
         if (id) {
-          const sellers = StorageService.get(DB_KEYS.RANKING, INITIAL_RANKING);
-          const s = sellers.find(item => item.id === id);
+          const { data: s } = await supabase.from('rankings').select('*').eq('id', id).single();
           if (s) {
             document.getElementById('rank-input-name').value = s.name;
             document.getElementById('rank-input-team').value = s.team || '';
@@ -1297,975 +384,38 @@
         this.editingId = null;
       }
 
-      static saveSeller(event) {
+      // Salvar/Atualizar no Supabase
+      static async saveSeller(event) {
         event.preventDefault();
         const name = document.getElementById('rank-input-name').value.trim();
         const team = document.getElementById('rank-input-team').value.trim();
         const target = parseFloat(document.getElementById('rank-input-target').value) || 0;
         const achieved = parseFloat(document.getElementById('rank-input-achieved').value) || 0;
 
-        let sellers = StorageService.get(DB_KEYS.RANKING, INITIAL_RANKING);
-
         if (this.editingId) {
-          sellers = sellers.map(s => s.id === this.editingId ? { ...s, name, team, target, achieved } : s);
+          await supabase.from('rankings').update({ name, team, target, achieved }).eq('id', this.editingId);
         } else {
-          sellers.push({ id: `rk-${Date.now()}`, name, team, target, achieved });
+          await supabase.from('rankings').insert([{ name, team, target, achieved }]);
         }
 
-        StorageService.set(DB_KEYS.RANKING, sellers);
         this.closeFormModal();
         this.render();
       }
 
-      static deleteSeller(id) {
-        if (!AuthService.checkAccess('ADMIN')) {
-          alert('Apenas o Administrador pode excluir vendedores do ranking.');
-          return;
-        }
-
+      // Excluir do Supabase
+      static async deleteSeller(id) {
         if (confirm('Deseja excluir este vendedor do ranking?')) {
-          let sellers = StorageService.get(DB_KEYS.RANKING, INITIAL_RANKING);
-          sellers = sellers.filter(s => s.id !== id);
-          StorageService.set(DB_KEYS.RANKING, sellers);
+          await supabase.from('rankings').delete().eq('id', id);
           this.render();
         }
       }
     }
 
-    // --- DASHBOARD CONTROLLER ---
-    class DashboardController {
-      static filter = 'today';
-
-      static setFilter(filterType) {
-        this.filter = filterType;
-        document.querySelectorAll('.dash-filter-btn').forEach(btn => {
-          btn.className = 'dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50';
-        });
-        if (event && event.target) {
-          event.target.className = 'dash-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg border border-indigo-600 bg-indigo-600 text-white';
-        }
-        this.render();
-      }
-
-      static render() {
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const filteredEntries = this.filterEntries(entries);
-
-        // Agrupar por data para cálculo diário
-        const datesMap = {};
-        filteredEntries.forEach(e => {
-          if (!datesMap[e.date]) datesMap[e.date] = [];
-          datesMap[e.date].push(e);
-        });
-
-        let totalGeral = 0;
-        let totalLoja = 0;
-        let totalIfood = 0;
-        let totalManha = 0;
-        let totalNoite = 0;
-
-        const payments = { cash: 0, credit: 0, debit: 0, pix: 0, noPayment: 0, couvert: 0 };
-        const dailyTotals = [];
-
-        Object.keys(datesMap).forEach(date => {
-          const cons = FinanceService.consolidateDay(entries, date);
-          totalGeral += cons.totalDay;
-          totalLoja += cons.totalStore;
-          totalIfood += cons.totalIfood;
-          totalManha += cons.totalMorning;
-          totalNoite += cons.totalNight;
-
-          dailyTotals.push({ date, total: cons.totalDay });
-        });
-
-        filteredEntries.forEach(e => {
-          payments.cash += e.cash || 0;
-          payments.credit += e.credit || 0;
-          payments.debit += e.debit || 0;
-          payments.pix += e.pix || 0;
-          payments.noPayment += e.noPayment || 0;
-          payments.couvert += e.couvertTotal || 0;
-        });
-
-        const activeDaysCount = Object.keys(datesMap).length || 1;
-        const mediaDiaria = totalGeral / activeDaysCount;
-
-        // Encontrar melhor e menor dia
-        dailyTotals.sort((a,b) => b.total - a.total);
-        const melhorDia = dailyTotals[0] || { date: '--/--/----', total: 0 };
-        const menorDia = dailyTotals[dailyTotals.length - 1] || { date: '--/--/----', total: 0 };
-
-        // Atualizar KPIs na tela
-        document.getElementById('kpi-faturamento-total').innerText = FinanceService.formatCurrency(totalGeral);
-        document.getElementById('kpi-faturamento-loja').innerText = FinanceService.formatCurrency(totalLoja);
-        document.getElementById('kpi-faturamento-ifood').innerText = FinanceService.formatCurrency(totalIfood);
-        document.getElementById('kpi-media-diaria').innerText = FinanceService.formatCurrency(mediaDiaria);
-        document.getElementById('kpi-faturamento-manha').innerText = FinanceService.formatCurrency(totalManha);
-        document.getElementById('kpi-faturamento-noite').innerText = FinanceService.formatCurrency(totalNoite);
-
-        document.getElementById('kpi-melhor-dia-val').innerText = FinanceService.formatCurrency(melhorDia.total);
-        document.getElementById('kpi-melhor-dia-data').innerText = melhorDia.date !== '--/--/----' ? melhorDia.date.split('-').reverse().join('/') : '--/--/----';
-
-        document.getElementById('kpi-menor-dia-val').innerText = FinanceService.formatCurrency(menorDia.total);
-        document.getElementById('kpi-menor-dia-data').innerText = menorDia.date !== '--/--/----' ? menorDia.date.split('-').reverse().join('/') : '--/--/----';
-
-        // Renderizar Gráficos Chart.js
-        ChartsManager.renderAll({ datesMap, payments, totalManha, totalNoite, totalLoja, totalIfood });
-      }
-
-      static filterEntries(entries) {
-        const todayStr = new Date().toISOString().split('T')[0];
-        if (this.filter === 'today') return entries.filter(e => e.date === todayStr);
-        if (this.filter === 'yesterday') {
-          const y = new Date(); y.setDate(y.getDate() - 1);
-          const yStr = y.toISOString().split('T')[0];
-          return entries.filter(e => e.date === yStr);
-        }
-        if (this.filter === 'week') {
-          const now = new Date();
-          const firstDay = new Date(now.setDate(now.getDate() - now.getDay()));
-          const firstDayStr = firstDay.toISOString().split('T')[0];
-          return entries.filter(e => e.date >= firstDayStr);
-        }
-        if (this.filter === 'month') {
-          const now = new Date();
-          const monthStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-          return entries.filter(e => e.date.startsWith(monthStr));
-        }
-        return entries;
-      }
-    }
-
-    // --- CASH ENTRY CONTROLLER ---
-    class CashController {
-      static currentShift = 'MANHA';
-
-      static init() {
-        document.getElementById('entry-date').value = new Date().toISOString().split('T')[0];
-        this.updateCouvertUI();
-        this.calculate();
-      }
-
-      static switchShift(shift) {
-        this.currentShift = shift;
-        document.getElementById('entry-shift-display').value = shift;
-
-        const btnM = document.getElementById('tab-btn-manha');
-        const btnN = document.getElementById('tab-btn-noite');
-
-        if (shift === 'MANHA') {
-          btnM.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-amber-500 text-amber-700 bg-white flex justify-center items-center gap-2 transition";
-          btnN.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex justify-center items-center gap-2 transition";
-        } else {
-          btnN.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-indigo-600 text-indigo-700 bg-white flex justify-center items-center gap-2 transition";
-          btnM.className = "flex-1 py-4 text-center font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex justify-center items-center gap-2 transition";
-        }
-
-        this.updateCouvertUI();
-        this.loadExistingEntryForCurrentSelection();
-      }
-
-      static updateCouvertUI() {
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const lbl = document.getElementById('lbl-couvert');
-        const preview = document.getElementById('couvert-calc-preview');
-
-        if (company.couvertType === 'QUANTIDADE') {
-          lbl.innerText = '🍽️ Qtd. de Couverts';
-          preview.innerText = `Valor Unitário: ${FinanceService.formatCurrency(company.couvertUnitPrice)}`;
-        } else {
-          lbl.innerText = '🍽️ Couvert (R$)';
-          preview.innerText = '';
-        }
-      }
-
-      static calculate() {
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const input = {
-          cash: document.getElementById('in-cash').value,
-          credit: document.getElementById('in-credit').value,
-          debit: document.getElementById('in-debit').value,
-          pix: document.getElementById('in-pix').value,
-          noPayment: document.getElementById('in-nopayment').value,
-          couvert: document.getElementById('in-couvert').value,
-          ifood: document.getElementById('in-ifood').value
-        };
-
-        const res = FinanceService.calculateShiftTotals(input, company);
-
-        document.getElementById('display-total-caixa').innerText = FinanceService.formatCurrency(res.totalCaixa);
-        document.getElementById('display-total-geral').innerText = FinanceService.formatCurrency(res.totalGeral);
-
-        return res;
-      }
-
-      static save(event) {
-        event.preventDefault();
-        const date = document.getElementById('entry-date').value;
-        const cashierName = document.getElementById('entry-cashier-name').value.trim();
-
-        if (!cashierName) {
-          alert('Informe o nome do caixa responsável.');
-          return;
-        }
-
-        // Verificar se dia está fechado
-        const closings = StorageService.get(DB_KEYS.CLOSINGS, []);
-        const closing = closings.find(c => c.date === date);
-        if (closing && closing.status === 'FECHADO') {
-          alert('Este dia está FECHADO. Não é possível alterar dados sem a reabertura por um Administrador.');
-          return;
-        }
-
-        const totals = this.calculate();
-        const user = AuthService.getCurrentUser();
-
-        const entry = {
-          id: `${date}_${this.currentShift}`,
-          date,
-          shift: this.currentShift,
-          cashierName,
-          createdById: user ? user.id : 'unknown',
-          updatedAt: new Date().toISOString(),
-          ...totals
-        };
-
-        let entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        entries = entries.filter(e => !(e.date === date && e.shift === this.currentShift));
-        entries.push(entry);
-
-        StorageService.set(DB_KEYS.ENTRIES, entries);
-        alert(`Turno da ${this.currentShift} salvo com sucesso!`);
-        this.onDateOrShiftChange();
-      }
-
-      static loadExistingEntryForCurrentSelection() {
-        const date = document.getElementById('entry-date').value;
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const entry = entries.find(e => e.date === date && e.shift === this.currentShift);
-
-        if (entry) {
-          document.getElementById('in-cash').value = entry.cash || '';
-          document.getElementById('in-credit').value = entry.credit || '';
-          document.getElementById('in-debit').value = entry.debit || '';
-          document.getElementById('in-pix').value = entry.pix || '';
-          document.getElementById('in-nopayment').value = entry.noPayment || '';
-          document.getElementById('in-couvert').value = entry.couvertRaw || '';
-          document.getElementById('in-ifood').value = entry.ifood || '';
-          document.getElementById('entry-cashier-name').value = entry.cashierName || '';
-        } else {
-          this.clearFormFieldsOnly();
-        }
-        this.calculate();
-        this.updateQuickConsolidated(date);
-      }
-
-      static onDateOrShiftChange() {
-        this.loadExistingEntryForCurrentSelection();
-      }
-
-      static updateQuickConsolidated(dateStr) {
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const cons = FinanceService.consolidateDay(entries, dateStr);
-
-        document.getElementById('quick-date-display').innerText = dateStr.split('-').reverse().join('/');
-        document.getElementById('qc-total-manha').innerText = FinanceService.formatCurrency(cons.totalMorning);
-        document.getElementById('qc-total-noite').innerText = FinanceService.formatCurrency(cons.totalNight);
-        document.getElementById('qc-total-ifood').innerText = FinanceService.formatCurrency(cons.totalIfood);
-        document.getElementById('qc-total-geral').innerText = FinanceService.formatCurrency(cons.totalDay);
-      }
-
-      static duplicatePreviousDay() {
-        const date = document.getElementById('entry-date').value;
-        const prevDate = new Date(date);
-        prevDate.setDate(prevDate.getDate() - 1);
-        const prevDateStr = prevDate.toISOString().split('T')[0];
-
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const prevEntry = entries.find(e => e.date === prevDateStr && e.shift === this.currentShift);
-
-        if (!prevEntry) {
-          alert('Nenhum lançamento correspondente encontrado no dia anterior.');
-          return;
-        }
-
-        if (confirm(`Carregar os dados de referência do dia ${prevDateStr.split('-').reverse().join('/')}?`)) {
-          document.getElementById('in-cash').value = prevEntry.cash || '';
-          document.getElementById('in-credit').value = prevEntry.credit || '';
-          document.getElementById('in-debit').value = prevEntry.debit || '';
-          document.getElementById('in-pix').value = prevEntry.pix || '';
-          document.getElementById('in-nopayment').value = prevEntry.noPayment || '';
-          document.getElementById('in-couvert').value = prevEntry.couvertRaw || '';
-          document.getElementById('in-ifood').value = prevEntry.ifood || '';
-          this.calculate();
-        }
-      }
-
-      static clearFormFieldsOnly() {
-        ['in-cash','in-credit','in-debit','in-pix','in-nopayment','in-couvert','in-ifood'].forEach(id => {
-          document.getElementById(id).value = '';
-        });
-      }
-
-      static clearForm() {
-        this.clearFormFieldsOnly();
-        document.getElementById('entry-cashier-name').value = '';
-        this.calculate();
-      }
-    }
-
-    // --- CLOSING CONTROLLER ---
-    class ClosingController {
-      static init() {
-        document.getElementById('closing-date-select').value = new Date().toISOString().split('T')[0];
-        this.loadDate();
-      }
-
-      static loadDate() {
-        const dateStr = document.getElementById('closing-date-select').value;
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const closings = StorageService.get(DB_KEYS.CLOSINGS, []);
-
-        const cons = FinanceService.consolidateDay(entries, dateStr);
-        const closing = closings.find(c => c.date === dateStr);
-
-        // Renderizar Detalhes Manhã
-        const mDet = document.getElementById('closing-manha-details');
-        if (cons.morning) {
-          document.getElementById('closing-manha-status').innerText = '✅ Registrado';
-          document.getElementById('closing-manha-status').className = 'text-xs font-semibold text-emerald-600';
-          mDet.innerHTML = `
-            <p>Dinheiro: ${FinanceService.formatCurrency(cons.morning.cash)}</p>
-            <p>Cartões: ${FinanceService.formatCurrency(cons.morning.credit + cons.morning.debit)}</p>
-            <p>PIX: ${FinanceService.formatCurrency(cons.morning.pix)}</p>
-            <p>Sem Pagamento: ${FinanceService.formatCurrency(cons.morning.noPayment)}</p>
-            <p>iFood: ${FinanceService.formatCurrency(cons.morning.ifood)}</p>
-            <p class="font-bold border-t pt-1 text-slate-800">Total Turno: ${FinanceService.formatCurrency(cons.morning.totalGeral)}</p>
-          `;
-        } else {
-          document.getElementById('closing-manha-status').innerText = '⚠️ Pendente';
-          document.getElementById('closing-manha-status').className = 'text-xs font-semibold text-amber-600';
-          mDet.innerHTML = `<p class="text-slate-400 italic font-sans">Nenhum lançamento registrado nesta data.</p>`;
-        }
-
-        // Renderizar Detalhes Noite
-        const nDet = document.getElementById('closing-noite-details');
-        if (cons.night) {
-          document.getElementById('closing-noite-status').innerText = '✅ Registrado';
-          document.getElementById('closing-noite-status').className = 'text-xs font-semibold text-emerald-600';
-          nDet.innerHTML = `
-            <p>Dinheiro: ${FinanceService.formatCurrency(cons.night.cash)}</p>
-            <p>Cartões: ${FinanceService.formatCurrency(cons.night.credit + cons.night.debit)}</p>
-            <p>PIX: ${FinanceService.formatCurrency(cons.night.pix)}</p>
-            <p>Sem Pagamento: ${FinanceService.formatCurrency(cons.night.noPayment)}</p>
-            <p>Couvert: ${FinanceService.formatCurrency(cons.night.couvertTotal)}</p>
-            <p>iFood: ${FinanceService.formatCurrency(cons.night.ifood)}</p>
-            <p class="font-bold border-t pt-1 text-slate-800">Total Turno: ${FinanceService.formatCurrency(cons.night.totalGeral)}</p>
-          `;
-        } else {
-          document.getElementById('closing-noite-status').innerText = '⚠️ Pendente';
-          document.getElementById('closing-noite-status').className = 'text-xs font-semibold text-amber-600';
-          nDet.innerHTML = `<p class="text-slate-400 italic font-sans">Nenhum lançamento registrado nesta data.</p>`;
-        }
-
-        // Resumo Geral
-        document.getElementById('closing-resumo-loja').innerText = FinanceService.formatCurrency(cons.totalStore);
-        document.getElementById('closing-resumo-ifood').innerText = FinanceService.formatCurrency(cons.totalIfood);
-        document.getElementById('closing-resumo-total').innerText = FinanceService.formatCurrency(cons.totalDay);
-
-        const badge = document.getElementById('closing-status-badge');
-        const btnClose = document.getElementById('btn-execute-close');
-        const btnReopen = document.getElementById('btn-execute-reopen');
-
-        if (closing && closing.status === 'FECHADO') {
-          badge.innerText = 'FECHADO';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
-          btnClose.classList.add('hidden');
-          
-          if (AuthService.checkAccess('ADMIN')) {
-            btnReopen.classList.remove('hidden');
-          }
-        } else {
-          badge.innerText = 'ABERTO';
-          badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
-          btnClose.classList.remove('hidden');
-          btnReopen.classList.add('hidden');
-        }
-      }
-
-      static executeClose() {
-        const dateStr = document.getElementById('closing-date-select').value;
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const cons = FinanceService.consolidateDay(entries, dateStr);
-
-        if (!cons.morning || !cons.night) {
-          alert('Impossível fechar o caixa: Os lançamentos de ambos os turnos (Manhã e Noite) devem estar salvos.');
-          return;
-        }
-
-        if (confirm(`Deseja realmente fechar o caixa do dia ${dateStr.split('-').reverse().join('/')}? Após o fechamento, as edições serão bloqueadas.`)) {
-          let closings = StorageService.get(DB_KEYS.CLOSINGS, []);
-          closings = closings.filter(c => c.date !== dateStr);
-
-          const user = AuthService.getCurrentUser();
-          closings.push({
-            id: `closing_${dateStr}`,
-            date: dateStr,
-            status: 'FECHADO',
-            closedAt: new Date().toISOString(),
-            closedById: user ? user.id : 'unknown',
-            totalDay: cons.totalDay
-          });
-
-          StorageService.set(DB_KEYS.CLOSINGS, closings);
-          alert('Caixa do dia fechado com sucesso!');
-          this.loadDate();
-        }
-      }
-
-      static executeReopen() {
-        if (!AuthService.checkAccess('ADMIN')) {
-          alert('Apenas administradores podem reabrir caixas fechados.');
-          return;
-        }
-
-        const dateStr = document.getElementById('closing-date-select').value;
-        if (confirm(`Tem certeza que deseja REABRIR o caixa do dia ${dateStr.split('-').reverse().join('/')}?`)) {
-          let closings = StorageService.get(DB_KEYS.CLOSINGS, []);
-          closings = closings.filter(c => c.date !== dateStr);
-          StorageService.set(DB_KEYS.CLOSINGS, closings);
-          alert('Caixa reaberto para edições!');
-          this.loadDate();
-        }
-      }
-    }
-
-    // --- HISTORY CONTROLLER ---
-    class HistoryController {
-      static render() {
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const closings = StorageService.get(DB_KEYS.CLOSINGS, []);
-        const search = document.getElementById('hist-search').value.toLowerCase();
-
-        const datesMap = {};
-        entries.forEach(e => datesMap[e.date] = true);
-
-        const tbody = document.getElementById('table-history-body');
-        tbody.innerHTML = '';
-
-        Object.keys(datesMap).sort().reverse().forEach(date => {
-          const cons = FinanceService.consolidateDay(entries, date);
-          const closing = closings.find(c => c.date === date);
-
-          const status = closing ? closing.status : (cons.morning && cons.night ? 'COMPLETO' : 'PARCIAL');
-
-          if (search && !date.includes(search) && !status.toLowerCase().includes(search)) return;
-
-          const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-50 border-b';
-          tr.innerHTML = `
-            <td class="p-4 font-bold text-slate-900">${date.split('-').reverse().join('/')}</td>
-            <td class="p-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${status === 'FECHADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${status}</span></td>
-            <td class="p-4 text-right font-mono">${FinanceService.formatCurrency(cons.totalMorning)}</td>
-            <td class="p-4 text-right font-mono">${FinanceService.formatCurrency(cons.totalNight)}</td>
-            <td class="p-4 text-right font-mono text-orange-600">${FinanceService.formatCurrency(cons.totalIfood)}</td>
-            <td class="p-4 text-right font-mono font-bold text-indigo-900">${FinanceService.formatCurrency(cons.totalDay)}</td>
-            <td class="p-4 text-center">
-              <button onclick="UI.navigate('fechamento'); document.getElementById('closing-date-select').value='${date}'; ClosingController.loadDate();" class="p-1 text-indigo-600 hover:text-indigo-900"><i data-lucide="eye" class="w-4 h-4"></i></button>
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-        lucide.createIcons();
-      }
-
-      static exportCSV() {
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        let csv = 'Data;Turno;Caixa;Dinheiro;Credito;Debito;PIX;SemPagamento;Couvert;iFood;TotalTurno\n';
-
-        entries.forEach(e => {
-          csv += `${e.date};${e.shift};${e.cashierName};${e.cash};${e.credit};${e.debit};${e.pix};${e.noPayment};${e.couvertTotal};${e.ifood};${e.totalGeral}\n`;
-        });
-
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `fluxo_de_caixa_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-      }
-    }
-
-    // --- REPORTS CONTROLLER ---
-    class ReportsController {
-      static generate() {
-        const start = document.getElementById('rep-start').value;
-        const end = document.getElementById('rep-end').value;
-
-        const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-
-        document.getElementById('rep-company-label').innerText = company.name;
-        document.getElementById('rep-emission-date').innerText = new Date().toLocaleDateString('pt-BR');
-        document.getElementById('rep-period-label').innerText = `Período: ${start ? start.split('-').reverse().join('/') : 'Início'} até ${end ? end.split('-').reverse().join('/') : 'Hoje'}`;
-
-        const filtered = entries.filter(e => {
-          if (start && e.date < start) return false;
-          if (end && e.date > end) return false;
-          return true;
-        });
-
-        const datesMap = {};
-        filtered.forEach(e => datesMap[e.date] = true);
-
-        let totLoja = 0, totIfood = 0, totGeral = 0;
-        const tbody = document.getElementById('rep-table-body');
-        tbody.innerHTML = '';
-
-        Object.keys(datesMap).sort().forEach(date => {
-          const cons = FinanceService.consolidateDay(entries, date);
-          totLoja += cons.totalStore;
-          totIfood += cons.totalIfood;
-          totGeral += cons.totalDay;
-
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td class="p-2 font-medium">${date.split('-').reverse().join('/')}</td>
-            <td class="p-2 text-right font-mono">${FinanceService.formatCurrency(cons.totalMorning)}</td>
-            <td class="p-2 text-right font-mono">${FinanceService.formatCurrency(cons.totalNight)}</td>
-            <td class="p-2 text-right font-mono text-orange-600">${FinanceService.formatCurrency(cons.totalIfood)}</td>
-            <td class="p-2 text-right font-mono font-bold">${FinanceService.formatCurrency(cons.totalDay)}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        const activeDays = Object.keys(datesMap).length || 1;
-        document.getElementById('rep-total-loja').innerText = FinanceService.formatCurrency(totLoja);
-        document.getElementById('rep-total-ifood').innerText = FinanceService.formatCurrency(totIfood);
-        document.getElementById('rep-total-geral').innerText = FinanceService.formatCurrency(totGeral);
-        document.getElementById('rep-media-diaria').innerText = FinanceService.formatCurrency(totGeral / activeDays);
-      }
-    }
-
-    // --- WHATSAPP CONTROLLER (v1.2 - Gestão e Disparo para 5 Números) ---
-    class WhatsappController {
-      static init() {
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const numbers = company.whatsappNumbers || [company.whatsappNumber || '', '', '', '', ''];
-        
-        for (let i = 1; i <= 5; i++) {
-          const field = document.getElementById(`wa-phone-${i}`);
-          if (field) field.value = numbers[i - 1] || '';
-        }
-
-        this.renderPreviewAndActions();
-      }
-
-      static saveConfig(event) {
-        if (event) event.preventDefault();
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const numbers = [];
-
-        for (let i = 1; i <= 5; i++) {
-          const raw = document.getElementById(`wa-phone-${i}`).value;
-          numbers.push(raw.replace(/\D/g, ''));
-        }
-
-        company.whatsappNumbers = numbers;
-        StorageService.set(DB_KEYS.COMPANY, company);
-        alert('Configurações dos 5 números salvas com sucesso!');
-        this.renderPreviewAndActions();
-      }
-
-      static buildMessage() {
-        const shiftData = CashController.calculate();
-        const dateStr = document.getElementById('entry-date').value.split('-').reverse().join('/');
-        const cashier = document.getElementById('entry-cashier-name').value || 'Não informado';
-
-        return `📊 *RESUMO DO CAIXA*
-
-📅 Data: ${dateStr}
-
-${CashController.currentShift === 'MANHA' ? '🌞 *MANHÃ*' : '🌙 *NOITE*'}
-
-💵 Dinheiro: ${FinanceService.formatCurrency(shiftData.cash)}
-💳 Crédito: ${FinanceService.formatCurrency(shiftData.credit)}
-💳 Débito: ${FinanceService.formatCurrency(shiftData.debit)}
-📱 PIX: ${FinanceService.formatCurrency(shiftData.pix)}
-📄 Sem Pagamento: ${FinanceService.formatCurrency(shiftData.noPayment)}
-${CashController.currentShift === 'NOITE' ? `🍽️ Couvert: ${FinanceService.formatCurrency(shiftData.couvertTotal)}\n` : ''}🍔 iFood: ${FinanceService.formatCurrency(shiftData.ifood)}
-
-💰 Total Caixa Loja: ${FinanceService.formatCurrency(shiftData.totalCaixa)}
-📊 Total Geral Turno: ${FinanceService.formatCurrency(shiftData.totalGeral)}
-
-━━━━━━━━━━━━━━
-👤 Responsável: ${cashier}`;
-      }
-
-      static renderPreviewAndActions() {
-        const previewBox = document.getElementById('wa-preview-box');
-        const actionsContainer = document.getElementById('wa-numbers-actions');
-        if (!previewBox || !actionsContainer) return;
-
-        const msg = this.buildMessage();
-        previewBox.innerText = msg;
-
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const numbers = company.whatsappNumbers || [];
-        const validNumbers = numbers.filter(n => n.trim().length > 0);
-
-        actionsContainer.innerHTML = '';
-
-        if (validNumbers.length === 0) {
-          actionsContainer.innerHTML = `<span class="text-xs text-rose-500 font-semibold">Nenhum número cadastrado para envio.</span>`;
-          return;
-        }
-
-        validNumbers.forEach((phone, idx) => {
-          const btn = document.createElement('button');
-          btn.className = 'px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow transition';
-          btn.innerHTML = `<i data-lucide="send" class="w-3.5 h-3.5"></i> Enviar para #${idx + 1} (${phone})`;
-          btn.onclick = () => this.openWhatsAppUrl(phone, msg);
-          actionsContainer.appendChild(btn);
-        });
-
-        if (validNumbers.length > 1) {
-          const btnAll = document.createElement('button');
-          btnAll.className = 'px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow transition';
-          btnAll.innerHTML = `<i data-lucide="share-2" class="w-3.5 h-3.5"></i> Disparar para Todos (${validNumbers.length})`;
-          btnAll.onclick = () => {
-            validNumbers.forEach((phone, i) => {
-              setTimeout(() => this.openWhatsAppUrl(phone, msg), i * 1000);
-            });
-          };
-          actionsContainer.appendChild(btnAll);
-        }
-
-        lucide.createIcons();
-      }
-
-      static openWhatsAppUrl(phone, msg) {
-        const cleanPhone = phone.replace(/\D/g, '');
-        const url = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
-        window.open(url, '_blank');
-      }
-
-      static generateAndOpenForCurrentShift() {
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        const numbers = company.whatsappNumbers || [company.whatsappNumber || ''];
-        const validNumbers = numbers.filter(n => n.trim().length > 0);
-
-        if (validNumbers.length === 0) {
-          alert('Nenhum número de WhatsApp cadastrado. Acesse a aba WhatsApp para configurar.');
-          return;
-        }
-
-        const msg = this.buildMessage();
-        validNumbers.forEach((phone, i) => {
-          setTimeout(() => this.openWhatsAppUrl(phone, msg), i * 800);
-        });
-      }
-    }
-
-    // --- CONFIG CONTROLLER ---
-    class ConfigController {
-      static init() {
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        document.getElementById('cfg-company-name').value = company.name;
-        document.getElementById('cfg-couvert-price').value = company.couvertUnitPrice;
-
-        if (company.couvertType === 'QUANTIDADE') {
-          document.getElementById('cfg-couvert-qty').checked = true;
-        } else {
-          document.getElementById('cfg-couvert-fin').checked = true;
-        }
-      }
-
-      static save(event) {
-        event.preventDefault();
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        company.name = document.getElementById('cfg-company-name').value;
-        company.couvertUnitPrice = parseFloat(document.getElementById('cfg-couvert-price').value) || 0;
-        company.couvertType = document.querySelector('input[name="cfgCouvertType"]:checked').value;
-
-        StorageService.set(DB_KEYS.COMPANY, company);
-        alert('Configurações atualizadas!');
-        UI.initApp();
-      }
-    }
-
-    /* ==========================================================================
-       6. GERENCIADOR DE GRÁFICOS (CHART.JS)
-       ========================================================================== */
-    class ChartsManager {
-      static instances = {};
-
-      static renderAll(data) {
-        this.renderFaturamentoDia(data.datesMap);
-        this.renderFormasPagamento(data.payments);
-        this.renderTurnos(data.totalManha, data.totalNoite);
-        this.renderCanais(data.totalLoja, data.totalIfood);
-      }
-
-      static destroyChart(id) {
-        if (this.instances[id]) {
-          this.instances[id].destroy();
-        }
-      }
-
-      static renderFaturamentoDia(datesMap) {
-        this.destroyChart('chart-faturamento-dia');
-        const ctx = document.getElementById('chart-faturamento-dia').getContext('2d');
-        const labels = Object.keys(datesMap).sort().map(d => d.split('-').reverse().join('/'));
-        const totals = Object.keys(datesMap).sort().map(d => {
-          const entries = StorageService.get(DB_KEYS.ENTRIES, []);
-          return FinanceService.consolidateDay(entries, d).totalDay;
-        });
-
-        this.instances['chart-faturamento-dia'] = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels,
-            datasets: [{
-              label: 'Faturamento Total (R$)',
-              data: totals,
-              backgroundColor: '#4f46e5',
-              borderRadius: 8
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
-
-      static renderFormasPagamento(p) {
-        this.destroyChart('chart-formas-pagamento');
-        const ctx = document.getElementById('chart-formas-pagamento').getContext('2d');
-        this.instances['chart-formas-pagamento'] = new Chart(ctx, {
-          type: 'doughnut',
-          data: {
-            labels: ['Dinheiro', 'Crédito', 'Débito', 'PIX', 'Sem Pag.', 'Couvert'],
-            datasets: [{
-              data: [p.cash, p.credit, p.debit, p.pix, p.noPayment, p.couvert],
-              backgroundColor: ['#10b981', '#3b82f6', '#6366f1', '#8b5cf6', '#f59e0b', '#ec4899']
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
-
-      static renderTurnos(m, n) {
-        this.destroyChart('chart-turnos');
-        const ctx = document.getElementById('chart-turnos').getContext('2d');
-        this.instances['chart-turnos'] = new Chart(ctx, {
-          type: 'pie',
-          data: {
-            labels: ['Manhã', 'Noite'],
-            datasets: [{
-              data: [m, n],
-              backgroundColor: ['#f59e0b', '#4f46e5']
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
-
-      static renderCanais(loja, ifood) {
-        this.destroyChart('chart-canais');
-        const ctx = document.getElementById('chart-canais').getContext('2d');
-        this.instances['chart-canais'] = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Canais de Venda'],
-            datasets: [
-              { label: 'Loja Física', data: [loja], backgroundColor: '#10b981', borderRadius: 6 },
-              { label: 'iFood / Delivery', data: [ifood], backgroundColor: '#f97316', borderRadius: 6 }
-            ]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
-    }
-
-    /* ==========================================================================
-       7. INTERFACE DE USUÁRIO E GERENCIADOR DE TELAS (UI MODULE)
-       ========================================================================== */
-    class UI {
-      static initApp() {
-        const user = AuthService.getCurrentUser();
-        if (!user) {
-          document.getElementById('screen-login').classList.remove('hidden');
-          document.getElementById('app-container').classList.add('hidden');
-          return;
-        }
-
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-
-        document.getElementById('user-name-display').innerText = user.name;
-        document.getElementById('user-role-display').innerText = user.role;
-        document.getElementById('user-avatar').innerText = user.name.substring(0, 2).toUpperCase();
-
-        const company = StorageService.get(DB_KEYS.COMPANY, INITIAL_COMPANY);
-        document.getElementById('company-name-display').innerText = company.name;
-
-        this.applyPermissions(user.role);
-        this.navigate('dashboard');
-        CashController.init();
-      }
-
-      static applyPermissions(role) {
-        const adminElements = document.querySelectorAll('.nav-admin');
-        if (role === 'ADMIN') {
-          adminElements.forEach(el => el.classList.remove('hidden'));
-        } else {
-          adminElements.forEach(el => el.classList.add('hidden'));
-        }
-      }
-
-      static navigate(viewId) {
-        const views = ['dashboard', 'lancar', 'ranking', 'fechamento', 'historico', 'relatorios', 'whatsapp', 'usuarios', 'configuracoes'];
-        
-        views.forEach(v => {
-          const el = document.getElementById(`view-${v}`);
-          const navBtn = document.getElementById(`nav-${v}`);
-
-          if (el) el.classList.add('hidden');
-          if (navBtn) {
-            navBtn.className = "nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/60 transition";
-          }
-        });
-
-        const activeView = document.getElementById(`view-${viewId}`);
-        const activeNavBtn = document.getElementById(`nav-${viewId}`);
-
-        if (activeView) activeView.classList.remove('hidden');
-        if (activeNavBtn) {
-          activeNavBtn.className = "nav-item w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition text-indigo-400 bg-indigo-950/50 border border-indigo-900/50";
-        }
-
-        const titleMap = {
-          dashboard: 'Dashboard Financeiro',
-          lancar: 'Lançamento de Caixa por Turno',
-          ranking: 'Ranking de Vendedores',
-          fechamento: 'Fechamento de Caixa Diário',
-          historico: 'Histórico de Lançamentos',
-          relatorios: 'Relatórios Financeiros',
-          whatsapp: 'Configuração e Envios WhatsApp',
-          usuarios: 'Gestão de Usuários',
-          configuracoes: 'Configurações da Empresa'
-        };
-
-        document.getElementById('page-title').innerText = titleMap[viewId] || 'Fluxo de Caixa';
-
-        // Disparar atualizações específicas da view
-        if (viewId === 'dashboard') DashboardController.render();
-        if (viewId === 'ranking') RankingController.render();
-        if (viewId === 'fechamento') ClosingController.init();
-        if (viewId === 'historico') HistoryController.render();
-        if (viewId === 'whatsapp') WhatsappController.init();
-        if (viewId === 'configuracoes') ConfigController.init();
-
-        lucide.createIcons();
-      }
-
-      static toggleMobileMenu() {
-        const nav = document.getElementById('nav-menu');
-        nav.classList.toggle('hidden');
-      }
-
-      static openNewUserModal() {
-        alert('Funcionalidade de cadastro de novos usuários ativada no painel de administração.');
-      }
-    }
-
-    /* ==========================================================================
-       8. DEMO SERVICE (DADOS MOCK DE DEMONSTRAÇÃO)
-       ========================================================================== */
-    class DemoService {
-      static loadDemoData() {
-        const today = new Date();
-        const entries = [];
-        const closings = [];
-
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date(today);
-          d.setDate(d.getDate() - i);
-          const dateStr = d.toISOString().split('T')[0];
-
-          // Turno Manhã
-          entries.push({
-            id: `${dateStr}_MANHA`,
-            date: dateStr,
-            shift: 'MANHA',
-            cashierName: 'João Silva',
-            cash: 350 + (i * 20),
-            credit: 800 + (i * 50),
-            debit: 400 + (i * 30),
-            pix: 600 + (i * 40),
-            noPayment: 0,
-            couvertRaw: 0,
-            couvertTotal: 0,
-            ifood: 300 + (i * 25),
-            totalCaixa: 2150 + (i * 140),
-            totalGeral: 2450 + (i * 165)
-          });
-
-          // Turno Noite
-          entries.push({
-            id: `${dateStr}_NOITE`,
-            date: dateStr,
-            shift: 'NOITE',
-            cashierName: 'Maria Oliveira',
-            cash: 500 + (i * 30),
-            credit: 1200 + (i * 80),
-            debit: 600 + (i * 40),
-            pix: 900 + (i * 60),
-            noPayment: 0,
-            couvertRaw: 150 + (i * 10),
-            couvertTotal: 150 + (i * 10),
-            ifood: 550 + (i * 45),
-            totalCaixa: 3350 + (i * 220),
-            totalGeral: 3900 + (i * 265)
-          });
-
-          if (i > 0) {
-            closings.push({
-              id: `closing_${dateStr}`,
-              date: dateStr,
-              status: 'FECHADO',
-              closedAt: new Date().toISOString(),
-              closedById: '1',
-              totalDay: 6350 + (i * 430)
-            });
-          }
-        }
-
-        StorageService.set(DB_KEYS.ENTRIES, entries);
-        StorageService.set(DB_KEYS.CLOSINGS, closings);
-        StorageService.set(DB_KEYS.RANKING, INITIAL_RANKING);
-
-        alert('Dados de demonstração carregados com sucesso!');
-        UI.initApp();
-      }
-
-      static clearDemoData() {
-        if (confirm('Deseja limpar todos os dados do sistema e reiniciar?')) {
-          localStorage.removeItem(DB_KEYS.ENTRIES);
-          localStorage.removeItem(DB_KEYS.CLOSINGS);
-          localStorage.removeItem(DB_KEYS.RANKING);
-          alert('Dados do sistema foram limpos.');
-          UI.initApp();
-        }
-      }
-    }
-
-    /* ==========================================================================
-       9. INICIALIZAÇÃO DA APLICAÇÃO
-       ========================================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
-      UI.initApp();
+    // Inicializar carregamento dos dados
+    window.onload = () => {
       lucide.createIcons();
-    });
+      UI.initApp();
+    };
   </script>
 </body>
 </html>
