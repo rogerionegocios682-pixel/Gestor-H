@@ -1,0 +1,129 @@
+{
+  "usuarios": [
+    {
+      "id": "user_master",
+      "email": "rogerionegocios682@gmail.com",
+      "senha": "@eRro404",
+      "nome": "Master Admin",
+      "role": "MASTER",
+      "ativo": true,
+      "permissoes": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "gerenciar_vendedores",
+        "editar_metas",
+        "gerar_relatorios",
+        "gerenciar_usuarios",
+        "deletar_dados",
+        "configurar_sistema",
+        "acessar_ranking",
+        "editar_rankings"
+      ],
+      "data_criacao": "2026-09-01T00:00:00Z",
+      "ultimo_acesso": null
+    },
+    {
+      "id": "user_caixa_manha",
+      "email": "caixamanha@gestorh.com",
+      "senha": "caixa1",
+      "nome": "Caixa Manhã",
+      "role": "CAIXA",
+      "turno": "manhã",
+      "ativo": true,
+      "permissoes": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "acessar_ranking"
+      ],
+      "data_criacao": "2026-09-01T00:00:00Z",
+      "ultimo_acesso": null
+    },
+    {
+      "id": "user_caixa_noite",
+      "email": "caixanoite@gestorh.com",
+      "senha": "caixa2",
+      "nome": "Caixa Noite",
+      "role": "CAIXA",
+      "turno": "noite",
+      "ativo": true,
+      "permissoes": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "acessar_ranking"
+      ],
+      "data_criacao": "2026-09-01T00:00:00Z",
+      "ultimo_acesso": null
+    },
+    {
+      "id": "user_garcom",
+      "email": "garcom@gestorh.com",
+      "senha": "123",
+      "nome": "Garçom",
+      "role": "GARCOM",
+      "ativo": true,
+      "permissoes": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "acessar_ranking"
+      ],
+      "data_criacao": "2026-09-01T00:00:00Z",
+      "ultimo_acesso": null
+    }
+  ],
+  "roles": {
+    "MASTER": {
+      "descricao": "Administrador Master - Acesso Total",
+      "nivel": 3,
+      "permissoes_padrao": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "gerenciar_vendedores",
+        "editar_metas",
+        "gerar_relatorios",
+        "gerenciar_usuarios",
+        "deletar_dados",
+        "configurar_sistema",
+        "acessar_ranking",
+        "editar_rankings"
+      ]
+    },
+    "ADMIN": {
+      "descricao": "Administrador",
+      "nivel": 2,
+      "permissoes_padrao": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "gerenciar_vendedores",
+        "editar_metas",
+        "gerar_relatorios",
+        "acessar_ranking",
+        "editar_rankings"
+      ]
+    },
+    "CAIXA": {
+      "descricao": "Operador de Caixa",
+      "nivel": 1,
+      "permissoes_padrao": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "acessar_ranking"
+      ]
+    },
+    "GARCOM": {
+      "descricao": "Garçom",
+      "nivel": 1,
+      "permissoes_padrao": [
+        "visualizar_dashboard",
+        "lancar_caixa",
+        "acessar_ranking"
+      ]
+    }
+  },
+  "configuracoes": {
+    "sessao_timeout_minutos": 60,
+    "tentativas_login_maximas": 5,
+    "bloqueio_tempo_minutos": 30,
+    "exigir_senha_forte": true,
+    "dois_fatores_ativado": false
+  }
+}
